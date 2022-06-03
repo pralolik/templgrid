@@ -1,0 +1,34 @@
+logLvl: "error|info|debug|disabled" # default - info
+file-input:
+  enabled: true|false
+  email-path: "{path}"
+  component-path: "{path}"
+file-output:
+  enabled: true|false
+  result-path: "{path}"
+preview-output:
+  enabled: true|false
+  result-path: "{path}"
+sendgrid-output:
+  enabled: true|false
+  sendgrid:
+    enabled: true|false
+    private-token: "{secret-here}"
+    delete-not-listed: true|false # default - false
+    activate-new-version: true|false # default - true
+  api:
+    auth:
+      auth-type: "hmac|bearer|basic|none"
+      hmac: # required if auth-type = hmac
+        key: "{secret-here}"
+      basic: # required if auth-type = basic
+        user: "{secret-here}"
+        password: "{secret-here}"
+      bearer: # required if auth-type = bearer
+        token: "{secret-here}"
+        header-name: "Authorization"
+    schema: "http|https"
+    host: "example.com"
+    get-path: "templates" # Get request application/json
+    post-path: "template" # Post request application/json
+    put-path: "template/{slug}" # Post request application/json

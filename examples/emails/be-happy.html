@@ -1,0 +1,22 @@
+{{ define "subject" }}
+Be happy, {{ sendGridParam "user_name"}}!
+{{ end }}
+
+{{ define "email" }}
+<!DOCTYPE html>
+<html lang="en">
+<body style="margin: auto; background-color: #f1f1f1;
+    width: 450px;">
+{{ template "header" }}
+<main style="margin: auto;background-color: white;">
+    <p style="    position: absolute;
+    top: 190px;
+    color: yellow;
+    left: 43%;
+    font-size: 25px;">Be happy {{ sendGridParam "sticker" }}</p>
+    {{ template "image" args "url" "https://cdn.pixabay.com/photo/2016/03/17/06/49/renovation-1262389_960_720.png" "alt" "Cat" "width" "450" "height" "350" }}
+</main>
+{{ template "footer" }}
+</body>
+</html>
+{{ end }}

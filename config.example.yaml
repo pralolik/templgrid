@@ -1,4 +1,5 @@
 logLvl: "error|info|debug|disabled" # default - info
+prefix: "preview_"
 file-input:
   enabled: true|false
   email-path: "{path}"
@@ -9,13 +10,9 @@ file-output:
 preview-output:
   enabled: true|false
   result-path: "{path}"
-sendgrid-output:
+api-sendgrid-output:
   enabled: true|false
-  sendgrid:
-    enabled: true|false
-    private-token: "{secret-here}"
-    delete-not-listed: true|false # default - false
-    activate-new-version: true|false # default - true
+  delete-not-listed: true|false # default - false
   api:
     auth:
       auth-type: "hmac|bearer|basic|none"
@@ -30,5 +27,10 @@ sendgrid-output:
     schema: "http|https"
     host: "example.com"
     get-path: "templates" # Get request application/json
-    post-path: "template" # Post request application/json
-    put-path: "template/{slug}" # Post request application/json
+    post-path: "templates" # Post request application/json
+    delete-path: "templates/{slug}" # Delete request application/json
+  sendgrid:
+    enabled: true|false # default - false
+    host: "https://api.sendgrid.com"
+    api-key: "{secret-here}"
+    activate-new-version: true|false # default - true

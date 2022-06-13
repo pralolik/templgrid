@@ -24,14 +24,15 @@ type EmailInputTemplate struct {
 	Name            string
 	EmailTemplate   *template.Template
 	SubjectTemplate *template.Template
-	Parameters      []string
 }
 
-func getDefaultFunctionsMap(inputTemplate *EmailInputTemplate) template.FuncMap {
+func getDefaultFunctionsMap() template.FuncMap {
 	return template.FuncMap{
-		"sendGridParam": func(name string) string {
-			inputTemplate.Parameters = append(inputTemplate.Parameters, name)
-			return fmt.Sprintf("{{ %s }}", name)
+		"sendGridParam": func(parameter string) (string, error) {
+			return fmt.Sprintf("{{%s}}", parameter), nil
+		},
+		"sendGridParamNoEscape": func(parameter string) (string, error) {
+			return fmt.Sprintf("{{{%s}}}", parameter), nil
 		},
 		"args": args,
 	}
@@ -53,9 +54,9 @@ func args(keyValues ...interface{}) (map[string]interface{}, error) {
 	return paramsMap, nil
 }
 
-func createTemplate(r *EmailInputTemplate, txt, bn string) (*template.Template, error) {
+func createTemplate(txt, bn string) (*template.Template, error) {
 	t := template.New(bn)
-	t.Funcs(getDefaultFunctionsMap(r))
+	t.Funcs(getDefaultFunctionsMap())
 	t, err := t.Parse(txt)
 	if err != nil {
 		return nil, fmt.Errorf("error with template parsing %v", err)

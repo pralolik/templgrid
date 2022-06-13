@@ -6,10 +6,11 @@ import (
 	"github.com/pralolik/templgrid/cmd"
 	"github.com/pralolik/templgrid/cmd/generator/input"
 	"github.com/pralolik/templgrid/cmd/generator/output"
+	"github.com/pralolik/templgrid/cmd/generator/output/auth"
 	"os"
 	"time"
 
-	generator "github.com/pralolik/templgrid/cmd/generator"
+	"github.com/pralolik/templgrid/cmd/generator"
 	"github.com/pralolik/templgrid/cmd/logging"
 )
 
@@ -85,7 +86,7 @@ func newInput(log logging.Logger, cfg *cmd.Config) (input.Interface, error) {
 	var inpt input.Interface
 
 	if cfg.FileInput.Enabled {
-		inpt = input.NewDirectoryInput(cfg.FileInput.EmailPath, cfg.FileInput.ComponentPath, log)
+		inpt = input.NewDirectoryInput(cfg.Prefix, cfg.FileInput.EmailPath, cfg.FileInput.ComponentPath, log)
 	}
 
 	if inpt == nil {
@@ -105,13 +106,44 @@ func newOutputs(log logging.Logger, cfg *cmd.Config) ([]output.Interface, error)
 		otpts = append(otpts, output.NewPreviewOutput(cfg.PreviewOutput.Path, log))
 	}
 
-	//if cfg.sendgridOutput {
-	//
-	//}
+	if cfg.ApiSendgridOutput.Enabled {
+		apiSndCfg := cfg.ApiSendgridOutput
+		apiOutput, err := output.NewApiOutput(
+			getApiAuthProvider(apiSndCfg.ApiConfig.Auth),
+			apiSndCfg.DeleteNotListed,
+			apiSndCfg.ApiConfig.Schema,
+			apiSndCfg.ApiConfig.Host,
+			apiSndCfg.ApiConfig.GetPath,
+			apiSndCfg.ApiConfig.PostPath,
+			apiSndCfg.ApiConfig.DeletePath,
+			log,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("api-sendgrid output creation error %v", err)
+		}
+
+		if apiSndCfg.SendgridConfig.Enabled {
+			otpts = append(
+				otpts,
+				output.NewSendGridOutput(
+					apiOutput,
+					apiSndCfg.SendgridConfig.Host,
+					apiSndCfg.SendgridConfig.ApiKey,
+					apiSndCfg.SendgridConfig.ActivateNewVersion,
+				),
+			)
+		} else {
+			otpts = append(otpts, apiOutput)
+		}
+	}
 
 	if len(otpts) == 0 {
 		return nil, fmt.Errorf("no output source for generator")
 	}
 
 	return otpts, nil
+}
+
+func getApiAuthProvider(_ cmd.AuthConfig) auth.Provider {
+	return auth.NoneAuth{}
 }

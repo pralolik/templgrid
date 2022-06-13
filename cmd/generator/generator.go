@@ -48,7 +48,6 @@ func (g *Generator) Generate() error {
 		if resource.Subject, err = getHtmlFromTemplate(email.SubjectTemplate, cmpnts); err != nil {
 			return fmt.Errorf("error with subject template %s %v", email.Name, err)
 		}
-		resource.Parameters = unique(email.Parameters)
 		g.logger.Info("Adding template %s", resource.Name)
 		g.logger.Debug("Resulted resource %s", resource)
 
@@ -94,16 +93,4 @@ func getHtmlFromTemplate(tmplt *template.Template, components []string) (res str
 
 	res = string(mb)
 	return
-}
-
-func unique(params []string) []string {
-	keys := make(map[string]bool)
-	var list []string
-	for _, entry := range params {
-		if _, value := keys[entry]; !value {
-			keys[entry] = true
-			list = append(list, entry)
-		}
-	}
-	return list
 }

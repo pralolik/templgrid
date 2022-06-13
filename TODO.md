@@ -1,7 +1,10 @@
 TODO:
-- #if and #each escaping for sendGrid parameters
-- API get/post/put
-- API auth
-- SendGrid API save
-- Docs/Examples/Makefile
-- Tests
+- API get/post/delete [Refactoring]
+- SendGrid API save [Refactoring]
+- Config validation [Refactoring]
+- API auth [Planned]
+- Config rewrite from CI [Planned]
+- Tests [Planned]
+- Docs/Examples/Makefile [Planned]
+- .github pipelines (on tag build, on PR lint + tests) [Planned]
+- Concurrency [Planned]

@@ -15,15 +15,17 @@ const (
 var AvailableCommands = []string{VersionCmd, GenerateCmd}
 
 type Config struct {
-	Command        string
-	LogLvl         string         `yaml:"logLvl"`
-	FileInput      fileInput      `yaml:"file-input"`
-	FileOutput     fileOutput     `yaml:"file-output"`
-	PreviewOutput  fileOutput     `yaml:"preview-output"`
-	SendgridOutput sendgridOutput `yaml:"sendgrid-output"`
+	Command           string
+	LogLvl            string            `yaml:"logLvl"`
+	Prefix            string            `yaml:"prefix"`
+	FileInput         fileInput         `yaml:"file-input"`
+	FileOutput        fileOutput        `yaml:"file-output"`
+	PreviewOutput     fileOutput        `yaml:"preview-output"`
+	ApiSendgridOutput apiSendgridOutput `yaml:"api-sendgrid-output"`
 }
 
 func (c *Config) validate() error {
+	// todo config validation
 	return nil
 }
 
@@ -38,30 +40,66 @@ type fileOutput struct {
 	Path    string `yaml:"result-path"`
 }
 
-type sendgridOutput struct {
-	Enabled        bool           `yaml:"enabled"`
-	SendgridConfig sendgridConfig `yaml:"sendgrid"`
-	ApiConfig      apiConfig      `yaml:"api"`
+type apiSendgridOutput struct {
+	Enabled         bool           `yaml:"enabled"`
+	DeleteNotListed bool           `yaml:"delete-not-listed"`
+	ApiConfig       apiConfig      `yaml:"api"`
+	SendgridConfig  sendgridConfig `yaml:"sendgrid"`
 }
 
 type sendgridConfig struct {
-	Enabled      bool   `yaml:"enabled"`
-	PrivateToken string `yaml:"private-token"`
+	Enabled            bool   `yaml:"enabled"`
+	Host               string `yaml:"host"`
+	ApiKey             string `yaml:"api-key"`
+	ActivateNewVersion bool   `yaml:"activate-new-version"`
 }
 
 type apiConfig struct {
-	Auth     authConfig `yaml:"auth"`
-	Schema   string     `yaml:"schema"`
-	Host     string     `yaml:"host"`
-	GetPath  string     `yaml:"get-path"`
-	SavePath string     `yaml:"save-path"`
+	Auth       AuthConfig `yaml:"auth"`
+	Schema     string     `yaml:"schema"`
+	Host       string     `yaml:"host"`
+	GetPath    string     `yaml:"get-path"`
+	PostPath   string     `yaml:"post-path"`
+	DeletePath string     `yaml:"delete-path"`
 }
 
 type authType string
 
-type authConfig struct {
-	AuthType authType `yaml:"auth-type"`
-	Token    string   `yaml:"secret"`
+func (at *authType) IsInEnum() bool {
+	switch *at {
+	case BearerAuthType, BasicAuthType, HmacAuthType, NoneAuthType:
+		return true
+	default:
+		return false
+	}
+}
+
+const (
+	BearerAuthType authType = "bearer"
+	BasicAuthType  authType = "basic"
+	HmacAuthType   authType = "hmac"
+	NoneAuthType   authType = "none"
+)
+
+type AuthConfig struct {
+	AuthType authType       `yaml:"auth-type"`
+	Hmac     hmacAuthType   `yaml:"hmac"`
+	Basic    basicAuthType  `yaml:"basic"`
+	Bearer   bearerAuthType `yaml:"bearer"`
+}
+
+type bearerAuthType struct {
+	Token  string `yaml:"token"`
+	Header string `yaml:"header-name"`
+}
+
+type basicAuthType struct {
+	User     string `yaml:"user"`
+	Password string `yaml:"password"`
+}
+
+type hmacAuthType struct {
+	key string `yaml:"key"`
 }
 
 func NewConfig(args []string) (*Config, error) {

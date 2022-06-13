@@ -1,19 +1,30 @@
 {{ define "footer" }}
-<table align="center" role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin: auto; ">
-    <tbody><tr>
+{{ sendGridParam "#each item" }}
+<li>Item: {{ sendGridParam "this.id" }} {{ sendGridParam "this.name" }}</li>
+{{ sendGridParam "#each this.sub_item" }}
+<li>Item:{{ sendGridParam "this.name" }}</li>
+{{ sendGridParam "/each"}}
+{{ sendGridParam "/each"}}
+<table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="margin: auto; "
+       width="100%">
+    <tbody>
+    <tr>
         <td valign="middle" style="background: #fafafa; padding: 10px">
             <table>
-                <tbody><tr>
+                <tbody>
+                <tr>
                     <td valign="top" width="33.333%" style="padding-top: 20px;">
                         <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
-                            <tbody><tr>
+                            <tbody>
+                            <tr>
                                 <td style="text-align: left; padding-right: 10px;">
                                     <h3 style="color: #000;
     font-size: 20px;">About</h3>
                                     <p>Footer component</p>
                                 </td>
                             </tr>
-                            </tbody></table>
+                            </tbody>
+                        </table>
                     </td>
                     <td valign="top" width="33.333%" style="padding-top: 20px;">
                     </td>

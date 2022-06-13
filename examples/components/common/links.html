@@ -2,5 +2,12 @@
 <ul>
     <li><a href="#">Github</a></li>
     <li><a href="#">Docs</a></li>
+    {{ sendGridParam "#if link" }}
+    <li><a href="#">One more link</a></li>
+    {{ sendGridParam "else if another_link" }}
+    <li><a href="#">One more another link</a></li>
+    {{ sendGridParam "else" }}
+    <li><a href="#">No link</a></li>
+    {{ sendGridParam "/if" }}
 </ul>
 {{ end }}

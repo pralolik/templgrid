@@ -11,11 +11,13 @@ type DirectoryInput struct {
 	components     []string
 	emailPath      string
 	componentsPath string
+	prefix         string
 	logger         logging.Logger
 }
 
-func NewDirectoryInput(emailPath, componentsPath string, logger logging.Logger) *DirectoryInput {
+func NewDirectoryInput(prefix, emailPath, componentsPath string, logger logging.Logger) *DirectoryInput {
 	return &DirectoryInput{
+		prefix:         prefix,
 		emailPath:      emailPath,
 		componentsPath: componentsPath,
 		logger:         logger,
@@ -74,7 +76,7 @@ func (di *DirectoryInput) GetEmails() ([]*EmailInputTemplate, error) {
 
 	var tmplts []*EmailInputTemplate
 	for _, file := range includeFiles {
-		tmpltName := getTemplateNameFromFile(file)
+		tmpltName := fmt.Sprintf("%s%s", di.prefix, getTemplateNameFromFile(file))
 		di.logger.Debug("Parsing email template %s", file)
 		resource := &EmailInputTemplate{
 			Name: tmpltName,
@@ -84,11 +86,11 @@ func (di *DirectoryInput) GetEmails() ([]*EmailInputTemplate, error) {
 			return nil, fmt.Errorf("%s %v", resource.Name, err)
 		}
 
-		if resource.EmailTemplate, err = createTemplate(resource, txt, MnBlck); err != nil {
+		if resource.EmailTemplate, err = createTemplate(txt, MnBlck); err != nil {
 			return nil, fmt.Errorf("%s %v", resource.Name, err)
 		}
 
-		if resource.SubjectTemplate, err = createTemplate(resource, txt, SbjBlck); err != nil {
+		if resource.SubjectTemplate, err = createTemplate(txt, SbjBlck); err != nil {
 			return nil, fmt.Errorf("%s %v", resource.Name, err)
 		}
 		tmplts = append(tmplts, resource)

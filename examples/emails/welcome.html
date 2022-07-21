@@ -1,5 +1,5 @@
 {{ define "subject" }}
-Welcome, {{ sendGridParam "user_name"}}!
+Welcome, {{ .user_name }}!
 {{ end }}
 
 {{ define "email" }}
@@ -9,10 +9,11 @@ Welcome, {{ sendGridParam "user_name"}}!
     width: 450px;">
 {{ template "header" }}
 <main style="margin: auto;background-color: white;">
-    <h3 style="text-align: center">Happy to see you here, {{ sendGridParam "user_name"}}! Thanks for visiting {{ sendGridParam "site_name"}}</h3>
-    {{ template "image" args "url" "http://assets.stickpng.com/thumbs/58aff1e7829958a978a4a6ce.png" "alt" "Welcome" "width" "450" "height" "350" }}
+    <h3 style="text-align: center">Happy to see you here, {{ .user_name }}! Thanks for visiting {{ .site_name }}</h3>
+    {{ template "image" args "url" "http://assets.stickpng.com/thumbs/58aff1e7829958a978a4a6ce.png" "alt" "Welcome"
+    "width" "450" "height" "350" }}
 </main>
-{{ template "footer" }}
+<!--{{ template "footer" }}-->
 </body>
 </html>
 {{ end }}

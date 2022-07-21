@@ -1,0 +1,31 @@
+name: Build
+
+on:
+  push:
+    tags:
+      - v**
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: docker login
+        env:
+          DOCKER_USER: ${{secrets.DOCKER_HUB_USERS}}
+          DOCKER_PASSWORD: ${{secrets.DOCKER_HUB_PASSWORD}}
+        run: |
+          docker login -u $DOCKER_USER -p $DOCKER_PASSWORD 
+
+      - name: Docker build
+        run: |
+          docker build -f Dockerfile \
+            --build-arg VERSION=${GITHUB_REF##*/} \
+            --build-arg COMMIT=${{ github.sha }} \
+            -t ${{ inputs.image }}:${{ github.sha }} \
+            -t ${{ inputs.image }}:${GITHUB_REF##*/} \
+            .
+      - name: Push image to Docker hub
+        run: |
+          docker push pralolik/templgrid-build:${{ github.sha }}
+          docker push pralolik/templgrid-build:${GITHUB_REF##*/}

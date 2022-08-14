@@ -96,4 +96,4 @@ Distributed under the MIT License. See `LICENSE.md` for more information.
 
 [license-shield]: https://img.shields.io/github/license/pralolik/templgrid.svg?style=for-the-badge
 
-[license-url]: https://github.com/pralolik/templgrid/blob/master/LICENSE.txt
+[license-url]: https://github.com/pralolik/templgrid/blob/master/LICENSE.md

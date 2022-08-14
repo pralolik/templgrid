@@ -22,8 +22,8 @@ jobs:
           docker build -f Dockerfile \
             --build-arg VERSION=${GITHUB_REF##*/} \
             --build-arg COMMIT=${{ github.sha }} \
-            -t ${{ inputs.image }}:${{ github.sha }} \
-            -t ${{ inputs.image }}:${GITHUB_REF##*/} \
+            -t pralolik/templgrid-build:${{ github.sha }} \
+            -t pralolik/templgrid-build:${GITHUB_REF##*/} \
             .
       - name: Push image to Docker hub
         run: |

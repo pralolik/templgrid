@@ -1,0 +1,9 @@
+logLvl: "error|info|debug|disabled" # default - info
+api:
+  enabled: true|false
+  port: 80
+  api-key: "" #secret for auth
+sendgrid:
+  enabled: true|false
+  private-token: "{secret-here}"
+  sand-box: true|false

@@ -15,7 +15,7 @@
   </a>
 
   <p align="center">
-    <a href="https://github.com/pralolik/templgrid/tree/master/docs/Documentation-1.md">Explore the docs</a>
+    <a href="https://github.com/pralolik/templgrid/blob/master/docs/1-Documentation.md">Explore the docs</a>
     ·
     <a href="https://github.com/pralolik/templgrid/issues">Report Bug</a>
     ·

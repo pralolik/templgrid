@@ -16,16 +16,20 @@ jobs:
           DOCKER_PASSWORD: ${{secrets.DOCKER_HUB_PASSWORD}}
         run: |
           docker login -u $DOCKER_USER -p $DOCKER_PASSWORD 
+      - name: Generate builder values
+        id: values
+        run: |
+          echo "::set-output name=version::`echo ${GITHUB_REF##*/} | sed -e 's/^[vV ]*//'`"
 
       - name: Docker build
         run: |
           docker build -f Dockerfile \
-            --build-arg VERSION=${GITHUB_REF##*/} \
+            --build-arg VERSION=${{ steps.values.outputs.version }} \
             --build-arg COMMIT=${{ github.sha }} \
             -t pralolik/templgrid-build:${{ github.sha }} \
-            -t pralolik/templgrid-build:${GITHUB_REF##*/} \
+            -t pralolik/templgrid-build:${{ steps.values.outputs.version }} \
             .
       - name: Push image to Docker hub
         run: |
           docker push pralolik/templgrid-build:${{ github.sha }}
-          docker push pralolik/templgrid-build:${GITHUB_REF##*/}
+          docker push pralolik/templgrid-build:${{ steps.values.outputs.version }}
